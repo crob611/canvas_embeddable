@@ -1,6 +1,9 @@
 /*global kbnInterpreter */
+
 import { embeddableRenderer } from './embeddableRenderer';
 import { embeddableFactories } from '../../../src/legacy/core_plugins/embeddable_api/public';
+import './embeddables/factories';
+
 // Elements show up in the Canvas elements menu and can be visually added to a canvas
 const elements = [
   () => ({
@@ -19,16 +22,18 @@ const browserFunctions = [
   () => ({
     name: 'embeddable',
     help: 'Render an embeddable',
-    args: {},
+    args: {
+      type: {
+        types: ['string'],
+        required: true,
+        help: 'Type of embeddable',
+      },
+    },
     type: 'embeddable',
-    fn: async () => {
-      const helloFactory = embeddableFactories.get('HELLO_WORLD_EMBEDDABLE_TYPE');
-
-      const embeddable = await helloFactory.create({ id: 'hello' });
-
+    fn: async (context, { type }) => {
       return {
         type: 'embeddable',
-        value: embeddable,
+        embeddableType: type,
       };
     },
   }),
